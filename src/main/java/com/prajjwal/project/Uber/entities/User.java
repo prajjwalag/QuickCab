@@ -13,8 +13,6 @@ import java.util.Set;
 @Table(name = "app_user")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -30,4 +28,5 @@ public class User {
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
 }

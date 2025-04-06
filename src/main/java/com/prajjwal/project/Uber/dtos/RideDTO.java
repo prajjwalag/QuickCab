@@ -33,4 +33,6 @@ public class RideDTO {
 
     private LocalDateTime endedAt;
 
+    private String dto;
+
 }
