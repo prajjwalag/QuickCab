@@ -10,6 +10,7 @@ import com.prajjwal.project.Uber.repositories.UserRepository;
 import com.prajjwal.project.Uber.services.AuthService;
 import com.prajjwal.project.Uber.services.RiderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -32,7 +34,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public UserDTO signup(SignUpDTO signUpDTO) {
-
         User user = userRepository.findByEmail(signUpDTO.getEmail()).orElse(null);
 
         if(user!=null) {
@@ -40,7 +41,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User mappedUser = modelMapper.map(signUpDTO, User.class);
+
         mappedUser.setRoles(Set.of(Role.RIDER));
+
         User savedUser = userRepository.save(mappedUser);
 
         riderService.createNewRider(savedUser);

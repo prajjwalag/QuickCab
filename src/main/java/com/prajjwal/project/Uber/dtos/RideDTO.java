@@ -1,25 +1,25 @@
 package com.prajjwal.project.Uber.dtos;
 
-import com.prajjwal.project.Uber.entities.Driver;
-import com.prajjwal.project.Uber.entities.Rider;
 import com.prajjwal.project.Uber.entities.enums.PaymentMethod;
 import com.prajjwal.project.Uber.entities.enums.RideStatus;
+import lombok.Data;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
+@Data
 public class RideDTO {
 
 
     private Long id;
 
-    private Point pickUpLocation;
+    private PointDTO pickUpLocation;
 
-    private Point dropOffLocation;
+    private PointDTO dropOffLocation;
 
     private LocalDateTime createdTime;
 
-    private Rider rider;
+    private RiderDTO rider;
 
     private DriverDTO driver;
 
@@ -33,6 +33,6 @@ public class RideDTO {
 
     private LocalDateTime endedAt;
 
-    private String dto;
+    private String otp;
 
 }

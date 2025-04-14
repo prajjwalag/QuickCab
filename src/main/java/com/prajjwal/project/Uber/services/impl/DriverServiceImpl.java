@@ -3,16 +3,48 @@ package com.prajjwal.project.Uber.services.impl;
 import com.prajjwal.project.Uber.dtos.DriverDTO;
 import com.prajjwal.project.Uber.dtos.RideDTO;
 import com.prajjwal.project.Uber.dtos.RiderDTO;
+import com.prajjwal.project.Uber.entities.Driver;
+import com.prajjwal.project.Uber.entities.Ride;
+import com.prajjwal.project.Uber.entities.RideRequest;
+import com.prajjwal.project.Uber.entities.enums.RideRequestStatus;
+import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
+import com.prajjwal.project.Uber.repositories.DriverRepository;
 import com.prajjwal.project.Uber.services.DriverService;
+import com.prajjwal.project.Uber.services.RideRequestService;
+import com.prajjwal.project.Uber.services.RideService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class DriverServiceImpl implements DriverService {
+
+    private final RideRequestService rideRequestService;
+    private final DriverRepository driverRepository;
+    private final RideService rideService;
+    private final ModelMapper modelMapper;
+
     @Override
-    public RideDTO acceptRide(Long rideId) {
-        return null;
+    public RideDTO acceptRide(Long rideRequestId) {
+
+        RideRequest rideRequest = rideRequestService.findRideRequestById(rideRequestId);
+        if(!rideRequest.getRideRequestStatus().equals(RideRequestStatus.PENDING)) {
+            throw new RuntimeException("RideRequest cannot be Accepted. Ride Request : " + rideRequest.getRideRequestStatus());
+        }
+
+        Driver currentDriver = getCurrentDriver();
+        log.info("Driver Information: " + currentDriver);
+        if(!currentDriver.getAvailable()) {
+            throw new RuntimeException("Driver cannot accept ride due to unavailability");
+        }
+
+        Ride ride = rideService.createNewRide(rideRequest, currentDriver);
+        return modelMapper.map(ride, RideDTO.class);
     }
 
     @Override
@@ -43,5 +75,10 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<RideDTO> getMyAllRides() {
         return List.of();
+    }
+
+    @Override
+    public Driver getCurrentDriver() {
+        return driverRepository.findById(2L).orElseThrow(() -> new ResourceNotFoundException("Driver with Id " + 2 + " not exist"));
     }
 }

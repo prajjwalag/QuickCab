@@ -1,6 +1,5 @@
 package com.prajjwal.project.Uber.strategies.impl;
 
-import com.prajjwal.project.Uber.dtos.RideRequestDTO;
 import com.prajjwal.project.Uber.entities.RideRequest;
 import com.prajjwal.project.Uber.services.DistanceService;
 import com.prajjwal.project.Uber.strategies.RideFareCalculationStrategy;

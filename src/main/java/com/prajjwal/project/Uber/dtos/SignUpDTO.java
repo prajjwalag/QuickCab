@@ -1,13 +1,14 @@
 package com.prajjwal.project.Uber.dtos;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class SignUpDTO {
 
     private String email;
