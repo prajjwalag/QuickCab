@@ -7,6 +7,7 @@ import com.prajjwal.project.Uber.entities.Ride;
 import com.prajjwal.project.Uber.entities.RideRequest;
 import com.prajjwal.project.Uber.entities.enums.RideRequestStatus;
 import com.prajjwal.project.Uber.entities.enums.RideStatus;
+import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
 import com.prajjwal.project.Uber.repositories.RideRepository;
 import com.prajjwal.project.Uber.services.RideRequestService;
 import com.prajjwal.project.Uber.services.RideService;
@@ -31,7 +32,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride getRideById(Long rideId) {
-        return null;
+        return rideRepository.findById(rideId).orElseThrow(() -> new ResourceNotFoundException("Ride with id: " + rideId + " does not exist"));
     }
 
     @Override
@@ -60,8 +61,9 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Ride updateRideWithStatus(Long rideId, RideStatus rideStatus) {
-        return null;
+    public Ride updateRideStatus(Ride ride, RideStatus rideStatus) {
+        ride.setRideStatus(rideStatus);
+        return rideRepository.save(ride);
     }
 
     @Override
