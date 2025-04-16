@@ -3,7 +3,6 @@ package com.prajjwal.project.Uber.dtos;
 import com.prajjwal.project.Uber.entities.enums.PaymentMethod;
 import com.prajjwal.project.Uber.entities.enums.RideStatus;
 import lombok.Data;
-import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 

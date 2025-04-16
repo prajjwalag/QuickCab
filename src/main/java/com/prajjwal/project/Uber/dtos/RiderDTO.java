@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 public class RiderDTO {
 
+    private Long id;
     private UserDTO user;
     private Double rating;
 }
