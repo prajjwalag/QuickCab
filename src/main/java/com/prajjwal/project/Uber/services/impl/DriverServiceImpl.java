@@ -11,6 +11,7 @@ import com.prajjwal.project.Uber.entities.enums.RideStatus;
 import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
 import com.prajjwal.project.Uber.repositories.DriverRepository;
 import com.prajjwal.project.Uber.services.DriverService;
+import com.prajjwal.project.Uber.services.PaymentService;
 import com.prajjwal.project.Uber.services.RideRequestService;
 import com.prajjwal.project.Uber.services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
+    private final PaymentService paymentService;
 
     @Override
     public RideDTO acceptRide(Long rideRequestId) {
@@ -73,6 +75,7 @@ public class DriverServiceImpl implements DriverService {
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
 
+        paymentService.createNewPayment(savedRide);
 
         return modelMapper.map(savedRide, RideDTO.class);
     }
