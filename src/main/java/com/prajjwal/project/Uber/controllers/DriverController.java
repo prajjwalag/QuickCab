@@ -24,4 +24,9 @@ public class DriverController {
     public ResponseEntity<RideDTO> startRide(@PathVariable Long rideRequestId, @RequestBody RideStartDTO rideStartDTO) {
         return ResponseEntity.ok(driverService.startRide(rideRequestId, rideStartDTO.getOtp()));
     }
+
+    @PostMapping("/endRide/{rideId}")
+    public ResponseEntity<RideDTO> endRide(@PathVariable Long rideId) {
+        return ResponseEntity.ok(driverService.endRide(rideId));
+    }
 }

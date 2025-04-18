@@ -42,14 +42,14 @@ public class RiderServiceImpl implements RiderService {
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         rideRequest.setRider(rider);
 
+        log.info("Requesting Fare");
         Double fare = rideStrategyManager.rideFareCalculationStrategy().calculateFare(rideRequest);
-
-
 
         rideRequest.setFare(fare);
 
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
 
+        log.info("Requesting Drivers");
         List<Driver> drivers = rideStrategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
 
         //TODO: Send Notifications to Drivers for this ride request
