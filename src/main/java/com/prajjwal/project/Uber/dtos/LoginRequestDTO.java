@@ -1,21 +1,16 @@
 package com.prajjwal.project.Uber.dtos;
 
-import com.prajjwal.project.Uber.entities.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Set;
-
 @Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class UserDTO {
-
-    private Long id;
-    private String name;
+public class LoginRequestDTO {
     private String email;
-    private Set<Role> roles;
+    private String password;
+
 }
