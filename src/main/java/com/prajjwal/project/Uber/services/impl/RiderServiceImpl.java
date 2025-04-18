@@ -11,6 +11,7 @@ import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
 import com.prajjwal.project.Uber.repositories.RideRequestRepository;
 import com.prajjwal.project.Uber.repositories.RiderRepository;
 import com.prajjwal.project.Uber.services.DriverService;
+import com.prajjwal.project.Uber.services.RatingService;
 import com.prajjwal.project.Uber.services.RideService;
 import com.prajjwal.project.Uber.services.RiderService;
 import com.prajjwal.project.Uber.strategies.RideStrategyManager;
@@ -34,6 +35,7 @@ public class RiderServiceImpl implements RiderService {
     private final RiderRepository riderRepository;
     private final RideService rideService;
     private final DriverService driverService;
+    private final RatingService ratingService;
 
     @Override
     public RideRequestDTO requestRide(RideRequestDTO rideRequestDTO) {
@@ -80,7 +82,18 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDTO rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+
+        Rider currentRider = getCurrentRider();
+        if(!currentRider.equals(ride.getRider())) {
+            throw new RuntimeException("Rider cannot rate driver as he was not the Rider of the ride");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("You can only rate driver after the ride has ended.");
+        }
+
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override

@@ -10,10 +10,7 @@ import com.prajjwal.project.Uber.entities.enums.RideRequestStatus;
 import com.prajjwal.project.Uber.entities.enums.RideStatus;
 import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
 import com.prajjwal.project.Uber.repositories.DriverRepository;
-import com.prajjwal.project.Uber.services.DriverService;
-import com.prajjwal.project.Uber.services.PaymentService;
-import com.prajjwal.project.Uber.services.RideRequestService;
-import com.prajjwal.project.Uber.services.RideService;
+import com.prajjwal.project.Uber.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -35,6 +32,7 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     public RideDTO acceptRide(Long rideRequestId) {
@@ -77,6 +75,7 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
 
         paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
 
         return modelMapper.map(savedRide, RideDTO.class);
     }
@@ -128,7 +127,18 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RiderDTO rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+
+        Driver currentDriver = getCurrentDriver();
+        if(!currentDriver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver cannot rate rider as he was not the Driver of the ride");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("Driver can only rate rider after the ride has ended.");
+        }
+
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override
@@ -153,6 +163,11 @@ public class DriverServiceImpl implements DriverService {
     public Driver updateDriverAvailability(Driver driver, Boolean availability) {
 
         driver.setAvailable(availability);
+        return driverRepository.save(driver);
+    }
+
+    @Override
+    public Driver createNewDriver(Driver driver) {
         return driverRepository.save(driver);
     }
 }

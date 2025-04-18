@@ -9,10 +9,13 @@ import lombok.ToString;
 import java.util.Set;
 
 @Entity
-@Table(name = "app_user")
 @Getter
 @Setter
 @ToString
+@Table(name = "app_user",
+        indexes = {
+        @Index(name = "idx_app_user_email", columnList = "email")
+})
 public class User {
 
     @Id
