@@ -10,10 +10,7 @@ import com.prajjwal.project.Uber.entities.enums.RideStatus;
 import com.prajjwal.project.Uber.exceptions.ResourceNotFoundException;
 import com.prajjwal.project.Uber.repositories.RideRequestRepository;
 import com.prajjwal.project.Uber.repositories.RiderRepository;
-import com.prajjwal.project.Uber.services.DriverService;
-import com.prajjwal.project.Uber.services.RatingService;
-import com.prajjwal.project.Uber.services.RideService;
-import com.prajjwal.project.Uber.services.RiderService;
+import com.prajjwal.project.Uber.services.*;
 import com.prajjwal.project.Uber.strategies.RideStrategyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +34,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideService rideService;
     private final DriverService driverService;
     private final RatingService ratingService;
+    private final EmailSenderService emailSenderService;
 
     @Override
     public RideRequestDTO requestRide(RideRequestDTO rideRequestDTO) {
@@ -55,7 +53,10 @@ public class RiderServiceImpl implements RiderService {
         log.info("Requesting Drivers");
         List<Driver> drivers = rideStrategyManager.driverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
 
-        //TODO: Send Notifications to Drivers for this ride request
+//        String[] driversEmails = drivers.stream()
+//
+//        //TODO: Send Notifications to Drivers for this ride request
+//        emailSenderService.sendEmail();
 
         return modelMapper.map(savedRideRequest, RideRequestDTO.class);
     }

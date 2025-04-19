@@ -41,7 +41,7 @@ public class DriverServiceImpl implements DriverService {
 
         RideRequest rideRequest = rideRequestService.findRideRequestById(rideRequestId);
         if(!rideRequest.getRideRequestStatus().equals(RideRequestStatus.PENDING)) {
-            throw new RuntimeException("RideRequest cannot be Accepted. Ride Request : " + rideRequest.getRideRequestStatus());
+            throw new RuntimeException("RideRequest cannot be Accepted. Ride Request Status: " + rideRequest.getRideRequestStatus());
         }
 
         Driver currentDriver = getCurrentDriver();
